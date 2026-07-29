@@ -206,9 +206,17 @@ a real 404, and the site boots with zero console errors under the production
 CSP: 32 chapters, 121 torque rows, 25 wired checklists.
 
 **Continuous deployment is wired.** Pushes to `main` trigger a Netlify build via
-a repository webhook and a read-only deploy key, so the `build.py --check` gate
-runs on every push: a commit that edits source without rebuilding `dist/` fails
-the deploy rather than shipping a stale bundle.
+a repository webhook and a read-only deploy key, so the build command runs on
+every push.
+
+What that gate is verified to do, precisely: `build.py --check` exits 0 on a
+fresh `dist/` and 1 on a stale one, checked locally; and Netlify ran
+`python3 tools/build.py --check && python3 tools/css-audit.py` in its own build
+image for commit `f6f0a9d` and went green. A green build is only reachable by
+that command running and exiting 0, which also settles the open question about
+`python3` being present in the build image. Not observed directly: a red build
+from a deliberately stale `dist/`. That last step relies on Netlify failing a
+deploy when the build command exits non-zero, which is its documented default.
 
 **Logbook import and narrow viewports, 2026-07-29.** Import parses a previous
 export and replaces the table, both the bare array and `{entries: [...]}` shapes.
