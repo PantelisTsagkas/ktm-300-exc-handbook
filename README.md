@@ -7,9 +7,9 @@ An offline, dependency-free workshop handbook for the KTM 300 EXC HardEnduro
 
 Two ways to run it:
 
-- **Served** — the repo root is the publish directory. `python3 -m http.server`
+- **Served** - the repo root is the publish directory. `python3 -m http.server`
   and open `index.html`, or point any static host at it.
-- **Offline single file** — `dist/ktm-300-exc-handbook.html` is one
+- **Offline single file** - `dist/ktm-300-exc-handbook.html` is one
   self-contained document. Copy it to a laptop and open it by double-clicking,
   no server and no connection.
 
@@ -82,16 +82,16 @@ internals are marked *Dealer* and are not covered.
 
 ## Features
 
-- **Search** — `⌘K`, `Ctrl+K` or `/`. Indexes chapters, sections, procedures,
+- **Search** - `⌘K`, `Ctrl+K` or `/`. Indexes chapters, sections, procedures,
   specification rows and every torque value. Searching `80 nm` or `swingarm`
   both work.
-- **Torque database** — chapter 10. Filter by subsystem, thread family and
+- **Torque database** - chapter 10. Filter by subsystem, thread family and
   threadlocker requirement; sort any column. Search results for a fastener
   deep-link into the table and highlight the row.
-- **Three print modes** — current chapter (masthead button), complete handbook
+- **Three print modes** - current chapter (masthead button), complete handbook
   (chapter 32), and single bench cards (*Print card* buttons). Procedures always
   print fully expanded, and checklist boxes print as hand-fillable squares.
-- **Logbook** — chapter 32. Add entries, export to JSON or CSV, import a
+- **Logbook** - chapter 32. Add entries, export to JSON or CSV, import a
   previous export.
 
 ## Engineering notes and trade-offs
@@ -111,7 +111,7 @@ never has to be maintained twice.
 `localStorage` there, so persistence would work on one machine and silently lose
 data on another. The logbook holds entries in memory and exports to a file you
 keep. A JSON export is portable, diffable and survives a cleared cache, which is
-what a service history actually needs — put it in a git repo and you have a
+what a service history actually needs - put it in a git repo and you have a
 versioned one.
 
 **Single HTML file.** Splitting chapters into separate files would need `fetch`,
