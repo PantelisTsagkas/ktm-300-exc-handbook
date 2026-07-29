@@ -205,17 +205,10 @@ follows `prefers-color-scheme`, since `theme.js` does not run there.
 a real 404, and the site boots with zero console errors under the production
 CSP: 32 chapters, 121 torque rows, 25 wired checklists.
 
-**Still unverified:** whether `python3` exists in the Netlify build image. The
-first deploy was `netlify deploy --prod --build`, which runs the build command
-on this machine rather than in Netlify's image, so it proves nothing either way.
-It only matters once the site is connected to GitHub for continuous deployment -
-see below. If the first CI build fails on it, drop `command` from `netlify.toml`
-and move the staleness gate to GitHub Actions.
-
-**Continuous deployment is not yet wired.** The site was created and deployed
-from the CLI, so pushes to GitHub do not currently trigger a build, and the
-`build.py --check` gate never runs. Connect the repo with `netlify init`, or in
-the Netlify UI under Project configuration, Build and deploy.
+**Continuous deployment is wired.** Pushes to `main` trigger a Netlify build via
+a repository webhook and a read-only deploy key, so the `build.py --check` gate
+runs on every push: a commit that edits source without rebuilding `dist/` fails
+the deploy rather than shipping a stale bundle.
 
 **Logbook import and narrow viewports, 2026-07-29.** Import parses a previous
 export and replaces the table, both the bare array and `{entries: [...]}` shapes.
