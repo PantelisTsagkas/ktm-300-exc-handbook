@@ -47,8 +47,9 @@ ktm_300_exc/
 
 ## Build
 
-The served tree is the source. The single file is generated from it, so the two
-cannot drift:
+The served tree is the source. The single file in `dist/` is generated from it,
+never edited directly, and `--check` fails the moment it goes stale against the
+source:
 
 ```
 python3 tools/build.py            # regenerate dist/
@@ -121,8 +122,11 @@ which `file://` also blocks. One document, routed client-side.
 
 Responsive to 360px, keyboard navigable throughout, visible focus rings,
 `prefers-reduced-motion` respected, `prefers-color-scheme` followed until you
-override it, sortable table headers exposed with `aria-sort` and keyboard
-activation, live regions on filter and checklist counts.
+override it, and sortable table headers exposed with `aria-sort` plus keyboard
+activation.
+
+The torque filter count is a live region. Checklist counts are not, and only
+the pre-ride checklist has a count element at all - see *Next*.
 
 ## Verification
 
@@ -131,30 +135,44 @@ What is checked in this repo today:
 | Check | How | Status |
 |---|---|---|
 | CSS cascade and grid integrity | `python3 tools/css-audit.py`, 12 assertions | passing |
-| Bundle matches source | `python3 tools/build.py --check` | passing |
-| Boot, routing, search, torque filtering | manual browser pass, recorded below | passing |
+| `dist/` bundle matches source | `python3 tools/build.py --check` | passing |
+| Runtime behaviour | manual browser pass, itemised below | passing, not automated |
 
-Last manual pass, 2026-07-29, Chromium, served from the repo root: 32 chapters
-routed, 121 torque rows rendered, subsystem and thread filters narrow correctly
-(Brakes 9, Brakes+Wheels 16, M8 24) and reset restores all 121, search returns
-hits for `swingarm`, `80 nm`, `air filter` and `coolant` and zero for a nonsense
-term, and the `dist/` bundle boots identically with zero external requests.
+**Manual pass, 2026-07-29, Chromium, served from the repo root.** Exactly what
+was exercised:
+
+- Boot and routing: 32 chapters registered, hash routing to a chapter works,
+  121 torque rows rendered.
+- Torque filters: Brakes narrows to 9, Brakes + Wheels to 16, M8 to 24, free
+  text `spindle` to 2, and Reset restores all 121.
+- Torque sorting: click and `Enter` both sort, `aria-sort` tracks the rendered
+  order, and Reset returns the headers to the default state.
+- Search: hits for `swingarm` (17), `80 nm` (23), `air filter` (37) and
+  `coolant` (63), zero for a nonsense term.
+- Theme toggle: flips `data-theme` dark and back.
+- Checklists: the pre-ride counter tracks ticks (`0 / 31` to `1 / 31`).
+- Logbook: add renders a row, Export JSON emits `application/json` with the
+  entry, Export CSV emits `text/csv` with quoted fields.
+- Bundle: `dist/` boots identically and makes zero external requests.
+
+**Not exercised:** the three print modes, logbook import, and rendering below
+360px. Print output in particular is hard to verify headlessly and has only been
+eyeballed.
 
 **Not yet automated.** An earlier draft of this README claimed 26 headless
-checks; that harness is not in this repo. The browser behaviour above is
-currently verified by hand, and automating it is the first item in *Next*.
+checks; that harness is not in this repo. Everything above is verified by hand,
+and automating it is the first item in *Next*.
 
 ## Next
 
-- [ ] Port the manual browser pass into Playwright specs and run them in CI.
-- [ ] Fix `role="button"` on sortable `<th>` elements: it overrides the implicit
-      `columnheader` role, which is what makes `aria-sort` meaningful, so the
-      sort state is currently not exposed to assistive tech at all.
-- [ ] Reset button should clear stale `aria-sort` attributes. It restores the
-      row order but leaves the previously sorted header still announcing its
-      old direction.
+- [ ] Port the manual pass above into Playwright specs and run them in CI.
+      That is the check that makes the rest of this README self-enforcing.
 - [ ] Feature-detect `localStorage` so theme and logbook persist when served
       over a real origin, keeping the in-memory path as the `file://` fallback.
 - [ ] Service worker and web app manifest: installable and offline-capable
       without giving up the served version.
 - [ ] Favicon (currently 404s).
+- [ ] Only 1 of 25 checklists has a `data-checklist-count` meter in the markup,
+      and only 2 have a reset button. The JS already supports every list; the
+      markup just never wired them up.
+- [ ] Give the checklist counters `aria-live`, matching the torque filter count.

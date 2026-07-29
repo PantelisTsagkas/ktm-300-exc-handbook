@@ -5740,12 +5740,20 @@ KTM.torqueDb = (function () {
         b.setAttribute('aria-pressed', 'false');
       });
       lockerWrap.querySelector('.chip-toggle').setAttribute('aria-pressed', 'true');
+      // Reset restores the default sort, so the announced sort state has to go
+      // back with it. Without this the previously sorted column keeps claiming
+      // a direction the rows no longer follow.
+      document.querySelectorAll('#torque-table th[data-sort]').forEach(function (th) {
+        th.setAttribute('aria-sort', th.dataset.sort === 'name' ? 'ascending' : 'none');
+      });
       render();
     });
 
     document.querySelectorAll('#torque-table th[data-sort]').forEach(function (th) {
       th.style.cursor = 'pointer';
-      th.setAttribute('role', 'button');
+      // Deliberately no role="button": that would override the implicit
+      // columnheader role, and aria-sort is only meaningful on a columnheader.
+      // The header stays a header and carries its own keyboard handler below.
       th.setAttribute('tabindex', '0');
       var activate = function () {
         var key = th.dataset.sort;
