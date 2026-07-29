@@ -1,0 +1,114 @@
+/* ==========================================================================
+   print.css — print-to-PDF and bench-card output
+   Two modes:
+     1. Normal print  -> the chapter you are looking at, cleanly typeset.
+     2. body.print-all -> the whole handbook as one document.
+     3. body.print-card -> a single element, isolated on the page.
+   ========================================================================== */
+
+@media print {
+  @page {
+    size: A4;
+    margin: 16mm 14mm 18mm;
+  }
+
+  :root {
+    --bg: #fff;
+    --bg-elevated: #fff;
+    --surface: #fff;
+    --surface-2: #f4f5f7;
+    --surface-3: #eceff2;
+    --line: #c8ced6;
+    --line-strong: #96a0ac;
+    --text: #000;
+    --text-muted: #333;
+    --text-faint: #666;
+    --accent: #c93f00;
+    --accent-text: #c93f00;
+    --accent-ink: #fff;
+    --grid-line: transparent;
+  }
+
+  html, body {
+    background: #fff !important;
+    color: #000 !important;
+    font-size: 10pt;
+    line-height: 1.45;
+  }
+  body::before { display: none; }
+
+  /* Chrome-free page */
+  .rail,
+  .masthead,
+  .toc,
+  .scrim,
+  .search,
+  .no-print,
+  .procedure__chev,
+  .btn { display: none !important; }
+
+  .app { display: block; }
+  .content { display: block; padding: 0; }
+
+  /* Every chapter prints when the whole book is requested */
+  body.print-all .chapter { display: block !important; break-before: page; }
+  body.print-all .chapter:first-of-type { break-before: auto; }
+
+  /* Isolate a single card or procedure.
+     JS marks the target and every ancestor up to the chapter, so this works
+     without :has() and degrades predictably in older browsers. */
+  body.print-card .chapter { display: none !important; }
+  body.print-card .print-ancestor { display: block !important; }
+  body.print-card .print-ancestor > *:not(.print-ancestor):not(.print-target) { display: none !important; }
+  body.print-card .print-target { display: block !important; break-inside: avoid; }
+  body.print-card .print-target * { display: revert; }
+
+  /* Procedures always print fully expanded: a collapsed step is a missed step */
+  .procedure__body { display: block !important; }
+  .procedure { break-inside: avoid; border: 1px solid #96a0ac; }
+  .procedure__summary { background: #f4f5f7; }
+
+  h1 { font-size: 20pt; }
+  h2 { font-size: 14pt; break-after: avoid; margin-top: 18pt; }
+  h3 { font-size: 12pt; break-after: avoid; }
+  h4 { font-size: 9pt; break-after: avoid; }
+  p, li { orphans: 3; widows: 3; }
+
+  .chapter__numeral { -webkit-text-stroke: 1px #96a0ac; color: transparent; }
+
+  table.spec { break-inside: auto; font-size: 8.5pt; }
+  table.spec thead { display: table-header-group; }
+  table.spec tr { break-inside: avoid; }
+  .table-wrap { overflow: visible; border-color: #c8ced6; }
+
+  .callout, .card, .wcard, .checklist li { break-inside: avoid; }
+  .callout--warning::before { background: #c93f00; }
+
+  /* Print the URL target of internal links as a chapter reference */
+  a[href^="#/"]::after {
+    content: " [ch. " attr(data-chapter-ref) "]";
+    font-size: 7.5pt;
+    color: #666;
+  }
+
+  .torque-chip { border-color: #96a0ac; break-inside: avoid; }
+  .badge { border-color: #96a0ac; }
+
+  /* Checkboxes must be fillable by hand once printed */
+  .checklist input[type="checkbox"] {
+    appearance: none;
+    width: 10pt; height: 10pt;
+    border: 1pt solid #000;
+    background: #fff;
+  }
+  .checklist input[type="checkbox"]::after { display: none; }
+  .checklist input:checked + span { text-decoration: none; color: #000; }
+
+  /* Signature line for logbook entries */
+  .print-sign {
+    display: block;
+    border-bottom: 1pt solid #000;
+    height: 22pt;
+    margin-top: 6pt;
+  }
+}

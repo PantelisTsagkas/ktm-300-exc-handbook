@@ -1,0 +1,316 @@
+/* ==========================================================================
+   layout.css — application shell
+   Three columns at desktop: chapter rail | content | on-this-page
+   ========================================================================== */
+
+.app {
+  display: grid;
+  grid-template-columns: var(--sidebar-w) minmax(0, 1fr);
+  /* Explicit rows are required, not cosmetic: the rail below uses
+     grid-row: 1 / -1, and -1 resolves against the EXPLICIT grid. Without
+     these two rows, -1 collapses back to line 1, the rail is placed in a
+     single row, and the content column gets auto-placed into row 2 of
+     column 1 — underneath a 100vh sidebar, i.e. off-screen. */
+  grid-template-rows: auto 1fr;
+  min-height: 100vh;
+  position: relative;
+  z-index: 1;
+}
+
+/* --------------------------------------------------------------------------
+   Masthead — spans the content column only, so the chapter rail reads as a
+   continuous spine from the top of the page.
+   -------------------------------------------------------------------------- */
+
+.masthead {
+  position: sticky;
+  top: 0;
+  z-index: 40;
+  height: var(--header-h);
+  display: flex;
+  align-items: center;
+  gap: var(--sp-3);
+  padding: 0 var(--sp-5);
+  background: color-mix(in srgb, var(--bg) 88%, transparent);
+  backdrop-filter: saturate(140%) blur(12px);
+  border-bottom: 1px solid var(--line);
+}
+
+.masthead__crumb {
+  font-family: var(--font-display);
+  font-size: var(--fs-xs);
+  text-transform: uppercase;
+  letter-spacing: var(--tracking-label);
+  color: var(--text-faint);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  flex: 1;
+}
+.masthead__crumb b { color: var(--text); font-weight: 700; }
+
+.masthead__actions { display: flex; align-items: center; gap: var(--sp-2); }
+
+/* --------------------------------------------------------------------------
+   Chapter rail
+   -------------------------------------------------------------------------- */
+
+.rail {
+  grid-row: 1 / -1;
+  background: var(--bg-elevated);
+  border-right: 1px solid var(--line);
+  display: flex;
+  flex-direction: column;
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  z-index: 50;
+}
+
+.rail__brand {
+  padding: var(--sp-4) var(--sp-4) var(--sp-4);
+  border-bottom: 1px solid var(--line);
+  display: block;
+  text-decoration: none;
+  color: inherit;
+}
+
+.rail__mark {
+  font-family: var(--font-display);
+  font-size: 1.5rem;
+  font-weight: 700;
+  line-height: 1;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--text);
+}
+.rail__mark span { color: var(--accent); }
+
+.rail__sub {
+  font-family: var(--font-mono);
+  font-size: var(--fs-2xs);
+  color: var(--text-faint);
+  letter-spacing: 0.06em;
+  margin-top: var(--sp-2);
+  display: block;
+  text-transform: uppercase;
+}
+
+.rail__scroll {
+  flex: 1;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  padding: var(--sp-4) 0 var(--sp-8);
+  scrollbar-width: thin;
+  scrollbar-color: var(--line-strong) transparent;
+}
+.rail__scroll::-webkit-scrollbar { width: 8px; }
+.rail__scroll::-webkit-scrollbar-thumb {
+  background: var(--line-strong);
+  border-radius: 99px;
+  border: 2px solid var(--bg-elevated);
+}
+
+.rail__part {
+  font-family: var(--font-display);
+  font-size: var(--fs-2xs);
+  text-transform: uppercase;
+  letter-spacing: var(--tracking-label);
+  color: var(--text-faint);
+  padding: var(--sp-5) var(--sp-4) var(--sp-2);
+  display: flex;
+  align-items: center;
+  gap: var(--sp-2);
+}
+.rail__part::after {
+  content: "";
+  flex: 1;
+  height: 1px;
+  background: var(--line);
+}
+.rail__part:first-child { padding-top: 0; }
+
+.rail__link {
+  display: grid;
+  grid-template-columns: 2rem 1fr;
+  align-items: baseline;
+  gap: var(--sp-2);
+  padding: var(--sp-2) var(--sp-4);
+  color: var(--text-muted);
+  text-decoration: none;
+  font-size: var(--fs-sm);
+  line-height: 1.35;
+  border-left: 2px solid transparent;
+  transition: background var(--dur-fast) var(--ease),
+              color var(--dur-fast) var(--ease);
+}
+.rail__link:hover { background: var(--surface-2); color: var(--text); }
+
+.rail__num {
+  font-family: var(--font-mono);
+  font-size: var(--fs-2xs);
+  color: var(--text-faint);
+  font-variant-numeric: tabular-nums;
+}
+
+.rail__link[aria-current="page"] {
+  background: var(--ktm-orange-wash);
+  border-left-color: var(--accent);
+  color: var(--text);
+  font-weight: 600;
+}
+.rail__link[aria-current="page"] .rail__num { color: var(--accent-text); }
+
+/* --------------------------------------------------------------------------
+   Content column
+   -------------------------------------------------------------------------- */
+
+.content {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  align-items: start;
+  padding: var(--sp-7) var(--sp-6) var(--sp-9);
+  gap: var(--sp-7);
+}
+
+@media (min-width: 1340px) {
+  .content {
+    grid-template-columns: minmax(0, 1fr) var(--toc-w);
+    padding-right: var(--sp-7);
+  }
+}
+
+.chapter { display: none; min-width: 0; }
+.chapter.is-active { display: block; animation: chapter-in var(--dur-mid) var(--ease); }
+
+@keyframes chapter-in {
+  from { opacity: 0; transform: translateY(6px); }
+  to   { opacity: 1; transform: none; }
+}
+
+/* Chapter masthead: the numeral is structural, not decorative. Workshop
+   manuals are referenced by number over the phone and across a bench. */
+.chapter__head {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: var(--sp-5);
+  align-items: start;
+  padding-bottom: var(--sp-5);
+  border-bottom: 1px solid var(--line);
+  margin-bottom: var(--sp-6);
+}
+
+.chapter__numeral {
+  font-family: var(--font-display);
+  font-size: var(--fs-3xl);
+  font-weight: 700;
+  line-height: 0.82;
+  color: transparent;
+  -webkit-text-stroke: 1.5px var(--line-strong);
+  font-variant-numeric: tabular-nums;
+  user-select: none;
+}
+
+.chapter__title { margin-bottom: var(--sp-2); }
+
+/* --------------------------------------------------------------------------
+   On-this-page rail
+   -------------------------------------------------------------------------- */
+
+.toc {
+  position: sticky;
+  top: calc(var(--header-h) + var(--sp-5));
+  max-height: calc(100vh - var(--header-h) - var(--sp-8));
+  overflow-y: auto;
+  font-size: var(--fs-sm);
+  border-left: 1px solid var(--line);
+  padding-left: var(--sp-4);
+  scrollbar-width: thin;
+}
+
+@media (max-width: 1339px) { .toc { display: none; } }
+
+.toc__title {
+  font-family: var(--font-display);
+  font-size: var(--fs-2xs);
+  text-transform: uppercase;
+  letter-spacing: var(--tracking-label);
+  color: var(--text-faint);
+  margin-bottom: var(--sp-3);
+}
+
+.toc__list { list-style: none; margin: 0; padding: 0; }
+.toc__list li { margin: 0; }
+
+.toc__link {
+  display: block;
+  padding: var(--sp-1) 0 var(--sp-1) var(--sp-3);
+  margin-left: calc(var(--sp-4) * -1 - 1px);
+  border-left: 2px solid transparent;
+  padding-left: calc(var(--sp-4) - 1px);
+  color: var(--text-muted);
+  text-decoration: none;
+  line-height: 1.4;
+}
+.toc__link:hover { color: var(--text); }
+.toc__link.is-current {
+  color: var(--accent-text);
+  border-left-color: var(--accent);
+  font-weight: 600;
+}
+.toc__link[data-depth="3"] { padding-left: calc(var(--sp-4) + var(--sp-3)); font-size: var(--fs-xs); }
+
+/* --------------------------------------------------------------------------
+   Mobile
+   -------------------------------------------------------------------------- */
+
+/* These two controls are mobile-only. The compound selector is deliberate:
+   both elements also carry .btn, and components.css loads after this file,
+   so a single-class `.menu-toggle { display: none }` loses the cascade to
+   `.btn { display: inline-flex }` and the controls appear on desktop. */
+.btn.rail__close,
+.btn.menu-toggle { display: none; }
+
+@media (max-width: 1023px) {
+  .app { grid-template-columns: minmax(0, 1fr); }
+
+  .rail {
+    position: fixed;
+    inset: 0 auto 0 0;
+    width: min(var(--sidebar-w), 86vw);
+    transform: translateX(-102%);
+    transition: transform var(--dur-mid) var(--ease);
+    box-shadow: var(--shadow-2);
+  }
+  .rail.is-open { transform: none; }
+
+  .btn.rail__close {
+    display: inline-flex;
+    position: absolute;
+    top: var(--sp-3);
+    right: var(--sp-3);
+  }
+
+  .btn.menu-toggle { display: inline-flex; }
+
+  .scrim {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.55);
+    z-index: 45;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity var(--dur-mid) var(--ease);
+  }
+  .scrim.is-open { opacity: 1; pointer-events: auto; }
+
+  .content { padding: var(--sp-5) var(--sp-4) var(--sp-8); }
+  .chapter__head { grid-template-columns: 1fr; gap: var(--sp-2); }
+  .chapter__numeral { font-size: 2.5rem; }
+}
+
+@media (max-width: 600px) {
+  :root { --fs-2xl: 1.875rem; --fs-xl: 1.375rem; --fs-lg: 1.125rem; }
+  .masthead { padding: 0 var(--sp-3); }
+  .masthead__crumb { font-size: var(--fs-2xs); }
+}

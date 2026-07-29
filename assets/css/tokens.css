@@ -1,0 +1,138 @@
+/* ==========================================================================
+   tokens.css — design tokens
+   KTM 300 EXC HardEnduro Workshop Handbook
+   Single source of truth for colour, type, spacing, elevation and motion.
+   ========================================================================== */
+
+:root {
+  /* --- Brand ------------------------------------------------------------ */
+  --ktm-orange:        #ff5a00;
+  --ktm-orange-bright: #ff7a2e;
+  --ktm-orange-deep:   #c93f00;
+  --ktm-orange-wash:   rgba(255, 90, 0, 0.12);
+
+  /* --- Signal colours (used only for hazard semantics) ------------------ */
+  --signal-danger:  #e5231b;
+  --signal-warn:    #ffb400;
+  --signal-ok:      #35b37e;
+  --signal-info:    #3d8bfd;
+
+  /* --- Threadlocker identity (matches the physical bottle colours) ------ */
+  --loctite-243:  #2f6fd0;  /* medium strength, blue   */
+  --loctite-2701: #35b37e;  /* high strength, green    */
+  --loctite-none: #6b7280;
+
+  /* --- Typography ------------------------------------------------------- */
+  /* Condensed industrial face for display + data labels. The KTM manual is
+     set in Blender Pro / Trade Gothic Condensed; these stacks fall back
+     through widely installed condensed faces with no network request. */
+  --font-display: "Blender Pro", "Trade Gothic Condensed No. 18",
+                  "Roboto Condensed", "Archivo Narrow", "Arial Narrow",
+                  "Helvetica Neue", Helvetica, Arial, sans-serif;
+  --font-body:    "Inter", system-ui, -apple-system, "Segoe UI", Roboto,
+                  "Helvetica Neue", Arial, sans-serif;
+  --font-mono:    ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas,
+                  "Liberation Mono", "Courier New", monospace;
+
+  --fs-2xs:  0.6875rem;  /* 11px  micro labels           */
+  --fs-xs:   0.75rem;    /* 12px  captions, table meta   */
+  --fs-sm:   0.8125rem;  /* 13px  dense data             */
+  --fs-base: 0.9375rem;  /* 15px  body                   */
+  --fs-md:   1.0625rem;  /* 17px  lead paragraph         */
+  --fs-lg:   1.375rem;   /* 22px  h3                     */
+  --fs-xl:   1.75rem;    /* 28px  h2                     */
+  --fs-2xl:  2.5rem;     /* 40px  h1                     */
+  --fs-3xl:  4rem;       /* 64px  chapter numeral        */
+
+  --lh-tight: 1.08;
+  --lh-snug:  1.3;
+  --lh-body:  1.65;
+
+  --tracking-display: 0.02em;
+  --tracking-label:   0.14em;
+
+  /* --- Spacing (4px base) ---------------------------------------------- */
+  --sp-1:  0.25rem;
+  --sp-2:  0.5rem;
+  --sp-3:  0.75rem;
+  --sp-4:  1rem;
+  --sp-5:  1.5rem;
+  --sp-6:  2rem;
+  --sp-7:  3rem;
+  --sp-8:  4rem;
+  --sp-9:  6rem;
+
+  /* --- Layout ----------------------------------------------------------- */
+  --sidebar-w:  17.5rem;
+  --toc-w:      15rem;
+  --measure:    72ch;
+  --header-h:   3.5rem;
+
+  --radius-sm: 2px;
+  --radius-md: 4px;
+  --radius-lg: 8px;
+
+  /* --- Motion ----------------------------------------------------------- */
+  --ease: cubic-bezier(0.2, 0.6, 0.2, 1);
+  --dur-fast: 120ms;
+  --dur-mid:  220ms;
+}
+
+/* --------------------------------------------------------------------------
+   Dark theme — the default. A workshop handbook lives on a bench under
+   work lights; dark is the resting state, light is the print-adjacent state.
+   -------------------------------------------------------------------------- */
+:root,
+[data-theme="dark"] {
+  --bg:            #0b0c0e;
+  --bg-elevated:   #131519;
+  --surface:       #181b20;
+  --surface-2:     #1f2329;
+  --surface-3:     #272c34;
+  --line:          #2c323a;
+  --line-strong:   #3d4550;
+
+  --text:          #e8eaed;
+  --text-muted:    #9aa2ae;
+  --text-faint:    #6b7480;
+  --text-inverse:  #0b0c0e;
+
+  --accent:        var(--ktm-orange);
+  --accent-text:   var(--ktm-orange-bright);
+  --accent-ink:    #0b0c0e;
+
+  --shadow-1: 0 1px 2px rgba(0, 0, 0, 0.5);
+  --shadow-2: 0 8px 28px rgba(0, 0, 0, 0.55);
+
+  --grid-line: rgba(255, 255, 255, 0.035);
+  color-scheme: dark;
+}
+
+/* --------------------------------------------------------------------------
+   Light theme — cool blueprint white rather than warm paper. Keeps the
+   orange reading as a warning colour instead of a decorative tint.
+   -------------------------------------------------------------------------- */
+[data-theme="light"] {
+  --bg:            #f3f5f7;
+  --bg-elevated:   #ffffff;
+  --surface:       #ffffff;
+  --surface-2:     #eef1f4;
+  --surface-3:     #e3e8ed;
+  --line:          #d6dce3;
+  --line-strong:   #b6bfc9;
+
+  --text:          #14171c;
+  --text-muted:    #545d69;
+  --text-faint:    #7b8593;
+  --text-inverse:  #ffffff;
+
+  --accent:        var(--ktm-orange-deep);
+  --accent-text:   var(--ktm-orange-deep);
+  --accent-ink:    #ffffff;
+
+  --shadow-1: 0 1px 2px rgba(16, 24, 40, 0.08);
+  --shadow-2: 0 12px 32px rgba(16, 24, 40, 0.14);
+
+  --grid-line: rgba(16, 24, 40, 0.04);
+  color-scheme: light;
+}
