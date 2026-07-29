@@ -5,6 +5,8 @@
 An offline, dependency-free workshop handbook for the KTM 300 EXC HardEnduro
 (2025/2026). Zero runtime dependencies, zero network requests, no framework.
 
+**Live: <https://ktm-300-exc-handbook.netlify.app>**
+
 Two ways to run it:
 
 - **Served** - the repo root is the publish directory. `python3 -m http.server`
@@ -198,10 +200,22 @@ empty-state row in the torque table still renders centred, and both logbook
 exports produce a `blob:` download. The 404 page serves with a 404 status and
 follows `prefers-color-scheme`, since `theme.js` does not run there.
 
-**Still unverified until first deploy:** whether `python3` exists in the Netlify
-build image. If the first build fails on that, drop `command` from
-`netlify.toml` entirely - the site needs no build step, only the staleness gate,
-and that can move to GitHub Actions instead.
+**Live deploy, 2026-07-29.** All five security headers arrive as configured,
+`/dist/` serves with `Content-Disposition: attachment`, an unknown path returns
+a real 404, and the site boots with zero console errors under the production
+CSP: 32 chapters, 121 torque rows, 25 wired checklists.
+
+**Still unverified:** whether `python3` exists in the Netlify build image. The
+first deploy was `netlify deploy --prod --build`, which runs the build command
+on this machine rather than in Netlify's image, so it proves nothing either way.
+It only matters once the site is connected to GitHub for continuous deployment -
+see below. If the first CI build fails on it, drop `command` from `netlify.toml`
+and move the staleness gate to GitHub Actions.
+
+**Continuous deployment is not yet wired.** The site was created and deployed
+from the CLI, so pushes to GitHub do not currently trigger a build, and the
+`build.py --check` gate never runs. Connect the repo with `netlify init`, or in
+the Netlify UI under Project configuration, Build and deploy.
 
 **Logbook import and narrow viewports, 2026-07-29.** Import parses a previous
 export and replaces the table, both the bare array and `{entries: [...]}` shapes.
