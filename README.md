@@ -7,7 +7,56 @@ An offline, dependency-free workshop handbook for the KTM 300 EXC HardEnduro
 
 **Live: <https://ktm-300-exc-handbook.netlify.app>**
 
-Two ways to run it:
+![Chapter 1 open, with the dark chapter rail down the left, the search field and theme toggle in the masthead, and a panel explaining the Manual, Workshop and Dealer provenance badges.](docs/screenshots/chapter-rail-provenance.png)
+
+## Why I built this
+
+I ride a 300 EXC. The owner's manual is a 7 MB PDF: fine at a desk, useless on a
+phone in a field with one bar of signal, and unsearchable in any way that helps
+when you need a torque figure with the bike already on its side. So I built the
+handbook I actually wanted in the van.
+
+One hard requirement drove the architecture: it has to open by double-clicking a
+file on a laptop with no network. That rules out ES modules, `fetch` and
+`localStorage`, all of which browsers block or cripple over `file://`. Every
+structural decision in this repo is downstream of that constraint, and they are
+written up in *Engineering notes* rather than left implicit.
+
+The second requirement matters more. A wrong torque figure is not a rendering
+bug, it strips a thread or drops a wheel. So the data had to prove itself rather
+than be trusted: all 121 torque values were transcribed and verified
+programmatically against the source text, every figure carries a badge stating
+where it came from, and where the manual is genuinely ambiguous the handbook
+says so instead of quietly picking a side. The same instinct runs through the
+build, where `dist/` cannot go stale because the deploy fails if it does.
+
+That is the thesis I build everything on, applied to a workshop manual rather
+than a data pipeline: infrastructure that proves it works.
+
+## Interface
+
+Thirty-two chapters in one document, routed by hash, with a persistent chapter
+rail and a search field that reaches every heading, procedure and torque value.
+
+![Chapter 2, dimensions and weight: a specification table tagged with a green Manual badge, listing wheelbase, seat height, ground clearance, steering head angle and axle loads in both metric and imperial columns.](docs/screenshots/technical-specifications.png)
+
+*Specification tables carry a provenance badge and both unit systems, reproducing
+KTM's own rounding convention rather than recalculating it.*
+
+![Chapter 14, daily inspection checklist: a pre-ride inspection card with a Print card button, a live "0 / 31 complete" counter, a Reset button, and checklist items for two-stroke oil, fuel level and coolant, each with a note underneath.](docs/screenshots/daily-inspection-checklist.png)
+
+*All 25 checklists track a live count and reset in place. Print card renders the
+list as hand-fillable boxes on A4.*
+
+![Chapter 32, maintenance logbook: an add-entry form with date, engine hours, work carried out, parts used and who did it, above a service history table holding one record, with Export JSON, Export CSV and Import JSON buttons.](docs/screenshots/maintenance-logbook.png)
+
+*The logbook holds entries in memory and exports to JSON or CSV, because
+`file://` pages cannot use `localStorage`. A JSON export is portable, diffable
+and survives a cleared cache.*
+
+## Running it
+
+Two ways:
 
 - **Served** - the repo root is the publish directory. `python3 -m http.server`
   and open `index.html`, or point any static host at it.
@@ -44,6 +93,8 @@ ktm_300_exc/
 │   └── css-audit.py            static cascade checks
 ├── dist/
 │   └── ktm-300-exc-handbook.html   build output, committed on purpose
+├── docs/
+│   └── screenshots/            README images only, not referenced by the app
 ├── 404.html                    served-only, not part of the bundle
 ├── netlify.toml                publish dir, CSP, deploy-time checks
 └── README.md
@@ -90,9 +141,22 @@ Three deliberate choices in that config:
 attachment`. It is meant to be copied to a laptop, and downloading rather than
 rendering it keeps the site-wide CSP from having to allow inline scripts.
 
-## Data provenance
+## Source and data provenance
 
-Every figure in the handbook is labelled:
+Everything in the handbook derives from one document: the **KTM 250/300 EXC
+Owner's Manual 2026**, item no. **3240239en**, the PDF KTM issues to owners.
+
+That PDF is copyright KTM AG and is **not redistributed here**. Get the copy that
+matches your VIN from KTM's own channels:
+
+- [Manuals & Maintenance](https://www.ktm.com/en-gb/service/manuals.html)
+- [Print on Demand portal](https://print.ktm.com/) for PDF downloads and printed
+  copies, including older model years
+
+The pipeline was: extract the text from that PDF, transcribe the specification
+and torque tables into semantic HTML, then verify the transcription
+programmatically against the extracted source rather than by eye. Every figure in
+the handbook is then labelled with where it came from:
 
 | Badge | Meaning |
 |---|---|
