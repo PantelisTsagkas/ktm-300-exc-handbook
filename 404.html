@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Not found - KTM 300 EXC HardEnduro Workshop Handbook</title>
+<meta name="robots" content="noindex">
+<meta name="color-scheme" content="dark light">
+<meta name="theme-color" content="#ff5a00">
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%2032%2032'%3E%3Crect%20width='32'%20height='32'%20fill='%23111214'/%3E%3Cpath%20d='M16%204.5%2026.4%2010.2v11.6L16%2027.5%205.6%2021.8V10.2z'%20fill='none'%20stroke='%23ff5a00'%20stroke-width='2.6'%20stroke-linejoin='round'/%3E%3Ccircle%20cx='16'%20cy='16'%20r='3.6'%20fill='%23ff5a00'/%3E%3C/svg%3E">
+<link rel="stylesheet" href="assets/css/tokens.css">
+<link rel="stylesheet" href="assets/css/base.css">
+<style>
+  /* Served-only page. It is not part of the offline bundle, so it carries its
+     own small layer rather than pulling in the whole app shell. */
+
+  /* theme.js does not run here and there is no toggle to honour, so follow the
+     OS directly. Only the handful of tokens this page actually uses. */
+  @media (prefers-color-scheme: light) {
+    :root {
+      --bg:           #f3f5f7;
+      --text:         #14171c;
+      --text-muted:   #545d69;
+      --text-inverse: #ffffff;
+      --accent:       var(--ktm-orange-deep);
+      --grid-line:    rgba(16, 24, 40, 0.04);
+      color-scheme: light;
+    }
+  }
+
+  .lost {
+    min-height: 100vh;
+    display: grid;
+    place-content: center;
+    gap: var(--sp-4);
+    padding: var(--sp-6);
+    text-align: center;
+  }
+  .lost__code {
+    font-family: var(--font-mono);
+    font-size: var(--fs-3xl);
+    line-height: var(--lh-tight);
+    color: var(--accent);
+  }
+  .lost__title {
+    font-size: var(--fs-xl);
+    line-height: var(--lh-snug);
+    margin: 0;
+  }
+  .lost__body {
+    color: var(--text-muted);
+    max-width: 44ch;
+    margin: 0 auto;
+    line-height: var(--lh-body);
+  }
+  .lost__back {
+    display: inline-block;
+    margin-top: var(--sp-3);
+    padding: var(--sp-3) var(--sp-5);
+    border: 1px solid var(--accent);
+    border-radius: var(--radius-md);
+    color: var(--accent);
+    font-family: var(--font-mono);
+    font-size: var(--fs-sm);
+    letter-spacing: var(--tracking-label);
+    text-transform: uppercase;
+    text-decoration: none;
+  }
+  .lost__back:hover,
+  .lost__back:focus-visible {
+    background: var(--accent);
+    color: var(--text-inverse);
+  }
+</style>
+</head>
+<body>
+<main class="lost">
+  <div class="lost__code">404</div>
+  <h1 class="lost__title">No such page</h1>
+  <p class="lost__body">
+    The handbook is a single document and every chapter lives behind a
+    <code>#</code> route on the front page. A link that looks like
+    <code>/chapter-10</code> will not resolve. Try
+    <code>/#torque-specifications</code> instead, or start from the top.
+  </p>
+  <p><a class="lost__back" href="/">Back to the handbook</a></p>
+</main>
+</body>
+</html>

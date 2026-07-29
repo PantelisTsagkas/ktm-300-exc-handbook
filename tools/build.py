@@ -30,6 +30,15 @@ OUT = ROOT / "dist" / "ktm-300-exc-handbook.html"
 LINK_RE = re.compile(r'[ \t]*<link rel="stylesheet" href="([^"]+)">\n?')
 SCRIPT_RE = re.compile(r'[ \t]*<script src="([^"]+)"></script>\n?')
 
+# Markup that only makes sense on the served site, such as the link that offers
+# this very bundle for download. Stripping it here rather than hiding it at
+# runtime keeps the bundle free of links it cannot resolve, and keeps the
+# generated table of contents honest.
+SERVED_ONLY_RE = re.compile(
+    r"[ \t]*<!-- served-only:start -->.*?<!-- served-only:end -->\n?",
+    re.S,
+)
+
 
 def banner(name: str) -> str:
     return f"/* ===== {name} ===== */\n"
@@ -44,6 +53,7 @@ def read_asset(href: str) -> str:
 
 def build() -> str:
     html = SOURCE.read_text(encoding="utf-8")
+    html = SERVED_ONLY_RE.sub("", html)
 
     css_hrefs = LINK_RE.findall(html)
     js_hrefs = SCRIPT_RE.findall(html)

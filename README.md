@@ -42,6 +42,8 @@ ktm_300_exc/
 │   └── css-audit.py            static cascade checks
 ├── dist/
 │   └── ktm-300-exc-handbook.html   build output, committed on purpose
+├── 404.html                    served-only, not part of the bundle
+├── netlify.toml                publish dir, CSP, deploy-time checks
 └── README.md
 ```
 
@@ -56,6 +58,35 @@ python3 tools/build.py            # regenerate dist/
 python3 tools/build.py --check    # fail if dist/ is stale
 python3 tools/css-audit.py        # static cascade checks
 ```
+
+## Deploy
+
+Netlify, configured in `netlify.toml`. The repo root is the publish directory
+and there is nothing to compile, so the build command is the check suite:
+
+```
+python3 tools/build.py --check && python3 tools/css-audit.py
+```
+
+A deploy fails if `dist/` was not rebuilt alongside a source change, which makes
+the "never edit `dist/` by hand" rule self-enforcing rather than a convention.
+
+Three deliberate choices in that config:
+
+- **No SPA catch-all redirect.** Routing is hash-based and every path is a real
+  file, so `/* /index.html 200` would only turn genuine 404s into a blank
+  chapter. `404.html` handles them instead.
+- **`connect-src 'none'` in the CSP.** The handbook makes zero network requests
+  by design, so the browser may as well enforce it. `style-src` has to allow
+  inline styles: the markup uses style attributes and the JS sets them on
+  injected rows.
+- **No `immutable` cache header on `assets/`.** The filenames are not
+  content-hashed, so a long max-age would serve stale CSS after every deploy.
+  ETag revalidation is correct here.
+
+`dist/ktm-300-exc-handbook.html` is served with `Content-Disposition:
+attachment`. It is meant to be copied to a laptop, and downloading rather than
+rendering it keeps the site-wide CSP from having to allow inline scripts.
 
 ## Data provenance
 
@@ -120,13 +151,13 @@ which `file://` also blocks. One document, routed client-side.
 
 ## Accessibility and quality floor
 
-Responsive to 360px, keyboard navigable throughout, visible focus rings,
+Responsive to 320px, keyboard navigable throughout, visible focus rings,
 `prefers-reduced-motion` respected, `prefers-color-scheme` followed until you
 override it, and sortable table headers exposed with `aria-sort` plus keyboard
 activation.
 
-The torque filter count is a live region. Checklist counts are not, and only
-the pre-ride checklist has a count element at all - see *Next*.
+All 25 checklists carry a count and a reset button, and every count is a live
+region, matching the torque filter count.
 
 ## Verification
 
@@ -135,7 +166,9 @@ What is checked in this repo today:
 | Check | How | Status |
 |---|---|---|
 | CSS cascade and grid integrity | `python3 tools/css-audit.py`, 12 assertions | passing |
+| Horizontal overflow, 320px to 1440px | browser pass, itemised below | passing, not automated |
 | `dist/` bundle matches source | `python3 tools/build.py --check` | passing |
+| Deploy headers and CSP | local server replaying `netlify.toml` headers | passing, not automated |
 | Runtime behaviour | manual browser pass, itemised below | passing, not automated |
 
 **Manual pass, 2026-07-29, Chromium, served from the repo root.** Exactly what
@@ -150,14 +183,42 @@ was exercised:
 - Search: hits for `swingarm` (17), `80 nm` (23), `air filter` (37) and
   `coolant` (63), zero for a nonsense term.
 - Theme toggle: flips `data-theme` dark and back.
-- Checklists: the pre-ride counter tracks ticks (`0 / 31` to `1 / 31`).
+- Checklists: all 25 lists render a count matching their own checkbox total,
+  ticking updates it, and Reset clears both the boxes and the count.
 - Logbook: add renders a row, Export JSON emits `application/json` with the
   entry, Export CSV emits `text/csv` with quoted fields.
-- Bundle: `dist/` boots identically and makes zero external requests.
+- Bundle: `dist/` boots identically, 32 chapters and 121 rows, zero external
+  requests, and the served-only download block is correctly stripped out.
 
-**Not exercised:** the three print modes, logbook import, and rendering below
-360px. Print output in particular is hard to verify headlessly and has only been
-eyeballed.
+**Header pass, 2026-07-29.** The headers in `netlify.toml` were replayed by a
+local server and the site exercised under them, because a plain
+`python3 -m http.server` sends none of them and would have proved nothing. Under
+the real CSP: no violations in the console on load, the inline-styled
+empty-state row in the torque table still renders centred, and both logbook
+exports produce a `blob:` download. The 404 page serves with a 404 status and
+follows `prefers-color-scheme`, since `theme.js` does not run there.
+
+**Still unverified until first deploy:** whether `python3` exists in the Netlify
+build image. If the first build fails on that, drop `command` from
+`netlify.toml` entirely - the site needs no build step, only the staleness gate,
+and that can move to GitHub Actions instead.
+
+**Logbook import and narrow viewports, 2026-07-29.** Import parses a previous
+export and replaces the table, both the bare array and `{entries: [...]}` shapes.
+Narrow rendering found and fixed one real bug: the logbook form's "Work carried
+out" field carried a fixed `grid-column: span 2` on an `auto-fit` grid, so below
+about 30rem, where auto-fit resolves to a single column, the span forced an
+implicit second column and pushed the whole page into horizontal scroll. Now
+zero page-level overflow at 320px, 360px and 1440px, with the two-track span
+still intact on desktop.
+
+Worth recording for anyone tempted by the obvious fix: `grid-column: 1 / -1`
+does **not** work here. An end line of `-1` does not expand inside
+`repeat(auto-fit, ...)`, so it silently collapses to a single track at every
+width. It removes the overflow and quietly loses the desktop layout.
+
+**Still not exercised:** the three print modes. Print output is hard to verify
+headlessly and has only been eyeballed.
 
 **Not yet automated.** An earlier draft of this README claimed 26 headless
 checks; that harness is not in this repo. Everything above is verified by hand,
@@ -171,8 +232,3 @@ and automating it is the first item in *Next*.
       over a real origin, keeping the in-memory path as the `file://` fallback.
 - [ ] Service worker and web app manifest: installable and offline-capable
       without giving up the served version.
-- [ ] Favicon (currently 404s).
-- [ ] Only 1 of 25 checklists has a `data-checklist-count` meter in the markup,
-      and only 2 have a reset button. The JS already supports every list; the
-      markup just never wired them up.
-- [ ] Give the checklist counters `aria-live`, matching the torque filter count.

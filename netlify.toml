@@ -1,0 +1,39 @@
+# Netlify configuration.
+#
+# The repo root is the publish directory: there is nothing to compile, only a
+# staleness gate. `build.py --check` fails the deploy if dist/ was not rebuilt
+# after a source change, which turns the README's "never edit dist/ by hand"
+# rule into something CI enforces rather than something we remember.
+
+[build]
+  publish = "."
+  command = "python3 tools/build.py --check && python3 tools/css-audit.py"
+
+# No SPA catch-all redirect on purpose. Routing is hash-based and every path
+# resolves to a real file, so `/* /index.html 200` would only mask real 404s.
+
+[[headers]]
+  for = "/*"
+  [headers.values]
+    # The handbook makes zero network requests by design. connect-src 'none'
+    # turns that claim into something the browser enforces.
+    # style-src needs 'unsafe-inline': the markup uses ~97 style attributes and
+    # the JS sets inline styles on injected table rows.
+    Content-Security-Policy = "default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self'; connect-src 'none'; object-src 'none'; base-uri 'self'; form-action 'none'; frame-ancestors 'none'"
+    X-Content-Type-Options = "nosniff"
+    Referrer-Policy = "no-referrer"
+    Permissions-Policy = "geolocation=(), camera=(), microphone=()"
+    X-Frame-Options = "DENY"
+
+# The bundle is meant to be copied to a laptop, not browsed here. Serving it as
+# an attachment also keeps it out of the CSP above, which would otherwise have
+# to allow inline scripts for the whole site: the bundle is inline <script> and
+# <style> by construction.
+[[headers]]
+  for = "/dist/*"
+  [headers.values]
+    Content-Disposition = "attachment"
+
+# Deliberately no long-lived cache header on assets. The filenames are not
+# content-hashed, so `immutable` would serve stale CSS after every deploy.
+# Netlify's default ETag revalidation is the correct behaviour here.

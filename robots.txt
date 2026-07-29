@@ -1,0 +1,5 @@
+User-agent: *
+Allow: /
+
+# tools/ holds the build and audit scripts, not handbook content.
+Disallow: /tools/

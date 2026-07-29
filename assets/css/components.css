@@ -282,6 +282,22 @@ table.spec .alt { color: var(--text-faint); font-size: var(--fs-xs); }
    Checklist
    -------------------------------------------------------------------------- */
 
+/* Count and reset, one row per checklist. procedures.js has always wired every
+   `.checklist[id]`; until now only the pre-ride list carried the markup to show
+   it. The count is a live region so a screen reader hears the tally change,
+   matching the torque filter count. */
+.checklist__meta {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--sp-3);
+  max-width: var(--measure);
+  margin: var(--sp-4) 0 0;
+}
+.checklist__meta .result-count { margin: 0; }
+.checklist__meta .btn { height: 1.75rem; font-size: var(--fs-2xs); }
+.checklist__meta + .checklist { margin-top: var(--sp-2); }
+
 .checklist { list-style: none; padding: 0; margin: var(--sp-3) 0 var(--sp-5); max-width: var(--measure); }
 .checklist li {
   display: grid;
@@ -670,6 +686,15 @@ table.spec .alt { color: var(--text-faint); font-size: var(--fs-xs); }
 }
 .logbook__form label { display: flex; flex-direction: column; gap: var(--sp-1); font-size: var(--fs-xs); color: var(--text-faint); font-family: var(--font-display); text-transform: uppercase; letter-spacing: var(--tracking-label); }
 .logbook__form .field { width: 100%; flex: none; }
+/* "Work carried out" gets two tracks, because it is the longest field. Below
+   30rem auto-fit resolves to a single column, and the span would then force an
+   implicit second one and push the page into horizontal scroll. `1 / -1` is not
+   the fix here: an end line of -1 does not expand inside repeat(auto-fit, ...),
+   so it collapses to a single track at every width. */
+.logbook__form .logbook__wide { grid-column: span 2; }
+@media (max-width: 30rem) {
+  .logbook__form .logbook__wide { grid-column: auto; }
+}
 .logbook__form textarea.field { height: auto; min-height: 2.125rem; padding: var(--sp-2) var(--sp-3); resize: vertical; line-height: 1.4; }
 
 .rule-line { height: 1px; background: var(--line); margin: var(--sp-6) 0; }

@@ -7,6 +7,10 @@
 <meta name="description" content="Offline workshop handbook for the KTM 300 EXC HardEnduro, 2025/2026. Torque database, service procedures, hard enduro setup and maintenance logbook.">
 <meta name="color-scheme" content="dark light">
 <meta name="theme-color" content="#ff5a00">
+<!-- Favicon as a data URI, not a file: build.py only inlines stylesheets and
+     scripts, so a linked icon would survive into the offline bundle as its one
+     and only external request. -->
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%2032%2032'%3E%3Crect%20width='32'%20height='32'%20fill='%23111214'/%3E%3Cpath%20d='M16%204.5%2026.4%2010.2v11.6L16%2027.5%205.6%2021.8V10.2z'%20fill='none'%20stroke='%23ff5a00'%20stroke-width='2.6'%20stroke-linejoin='round'/%3E%3Ccircle%20cx='16'%20cy='16'%20r='3.6'%20fill='%23ff5a00'/%3E%3C/svg%3E">
 <link rel="stylesheet" href="assets/css/tokens.css">
 <link rel="stylesheet" href="assets/css/base.css">
 <link rel="stylesheet" href="assets/css/layout.css">
@@ -1117,12 +1121,10 @@
   <div class="wcard" id="card-preride">
     <div class="wcard__head">
       <h4>Pre-ride inspection</h4>
-      <div class="no-print" style="display:flex;gap:.5rem">
-        <button class="btn" type="button" data-checklist-reset="cl-preride">Reset</button>
-        <button class="btn" type="button" data-print-card="card-preride"><svg class="btn__ico"><use href="#i-print"/></svg> Print card</button>
-      </div>
+      <button class="btn" type="button" data-print-card="card-preride"><svg class="btn__ico"><use href="#i-print"/></svg> Print card</button>
     </div>
-    <p class="result-count" data-checklist-count="cl-preride">&nbsp;</p>
+
+    <p class="checklist__meta no-print"><span class="result-count" data-checklist-count="cl-preride" role="status" aria-live="polite">&nbsp;</span><button class="btn" type="button" data-checklist-reset="cl-preride">Reset</button></p>
 
     <h4>Fluids</h4>
     <ul class="checklist" id="cl-preride">
@@ -1172,6 +1174,7 @@
   </div>
 
   <h2 id="post-ride">After the ride</h2>
+  <p class="checklist__meta no-print"><span class="result-count" data-checklist-count="cl-postride" role="status" aria-live="polite">&nbsp;</span><button class="btn" type="button" data-checklist-reset="cl-postride">Reset</button></p>
   <ul class="checklist" id="cl-postride">
     <li><input type="checkbox" id="a1"><span><label for="a1">Wash before the mud dries, avoiding direct jet on bearings and seals</label></span></li>
     <li><input type="checkbox" id="a2"><span><label for="a2">Lubricate the chain while it is still warm</label></span></li>
@@ -1333,6 +1336,7 @@
       </ul>
 
       <h4>Final inspection</h4>
+      <p class="checklist__meta no-print"><span class="result-count" data-checklist-count="cl-brake-check" role="status" aria-live="polite">&nbsp;</span><button class="btn" type="button" data-checklist-reset="cl-brake-check">Reset</button></p>
       <ul class="checklist" id="cl-brake-check">
         <li><input type="checkbox" id="bc1"><span><label for="bc1">All four pads above 1 mm, uncracked, uncontaminated</label></span></li>
         <li><input type="checkbox" id="bc2"><span><label for="bc2">Both discs above their wear limit, no scoring or warp</label></span></li>
@@ -1400,6 +1404,7 @@
       </ul>
 
       <h4>Final inspection</h4>
+      <p class="checklist__meta no-print"><span class="result-count" data-checklist-count="cl-brake-pads" role="status" aria-live="polite">&nbsp;</span><button class="btn" type="button" data-checklist-reset="cl-brake-pads">Reset</button></p>
       <ul class="checklist" id="cl-brake-pads">
         <li><input type="checkbox" id="bp1"><span><label for="bp1">Pads correctly oriented, pin and clip secured</label></span></li>
         <li><input type="checkbox" id="bp2"><span><label for="bp2">Caliper screws torqued with Loctite 243</label></span></li>
@@ -1464,6 +1469,7 @@
       </ul>
 
       <h4>Final inspection</h4>
+      <p class="checklist__meta no-print"><span class="result-count" data-checklist-count="cl-brake-fluid" role="status" aria-live="polite">&nbsp;</span><button class="btn" type="button" data-checklist-reset="cl-brake-fluid">Reset</button></p>
       <ul class="checklist" id="cl-brake-fluid">
         <li><input type="checkbox" id="bf1"><span><label for="bf1">Lever and pedal firm, correct free travel</label></span></li>
         <li><input type="checkbox" id="bf2"><span><label for="bf2">Bleed nipples closed and capped, no weeping</label></span></li>
@@ -1540,6 +1546,7 @@
       </ul>
 
       <h4>Final inspection</h4>
+      <p class="checklist__meta no-print"><span class="result-count" data-checklist-count="cl-chain-check" role="status" aria-live="polite">&nbsp;</span><button class="btn" type="button" data-checklist-reset="cl-chain-check">Reset</button></p>
       <ul class="checklist" id="cl-chain-check">
         <li><input type="checkbox" id="cc1"><span><label for="cc1">Tension 58 to 61 mm at the tightest point</label></span></li>
         <li><input type="checkbox" id="cc2"><span><label for="cc2">No tight links, seized rollers or damaged plates</label></span></li>
@@ -1596,6 +1603,7 @@
       </ul>
 
       <h4>Final inspection</h4>
+      <p class="checklist__meta no-print"><span class="result-count" data-checklist-count="cl-chain-adjust" role="status" aria-live="polite">&nbsp;</span><button class="btn" type="button" data-checklist-reset="cl-chain-adjust">Reset</button></p>
       <ul class="checklist" id="cl-chain-adjust">
         <li><input type="checkbox" id="ca1"><span><label for="ca1">Tension 58 to 61 mm after torquing</label></span></li>
         <li><input type="checkbox" id="ca2"><span><label for="ca2">Adjuster marks equal both sides, wheel square</label></span></li>
@@ -1664,6 +1672,7 @@
       </ul>
 
       <h4>Final inspection</h4>
+      <p class="checklist__meta no-print"><span class="result-count" data-checklist-count="cl-chain-clean" role="status" aria-live="polite">&nbsp;</span><button class="btn" type="button" data-checklist-reset="cl-chain-clean">Reset</button></p>
       <ul class="checklist" id="cl-chain-clean">
         <li><input type="checkbox" id="cn1"><span><label for="cn1">Chain clean, dry and lubricated on the inner face</label></span></li>
         <li><input type="checkbox" id="cn2"><span><label for="cn2">No tight or seized links through a full rotation</label></span></li>
@@ -1749,6 +1758,7 @@
       </ul>
 
       <h4>Final inspection</h4>
+      <p class="checklist__meta no-print"><span class="result-count" data-checklist-count="cl-air-filter" role="status" aria-live="polite">&nbsp;</span><button class="btn" type="button" data-checklist-reset="cl-air-filter">Reset</button></p>
       <ul class="checklist" id="cl-air-filter">
         <li><input type="checkbox" id="af1"><span><label for="af1">Filter free of tears, evenly oiled, correctly oriented</label></span></li>
         <li><input type="checkbox" id="af2"><span><label for="af2">Sealing face greased and fully seated on the flange</label></span></li>
@@ -1866,6 +1876,7 @@
       </ul>
 
       <h4>Final inspection</h4>
+      <p class="checklist__meta no-print"><span class="result-count" data-checklist-count="cl-spark-plug" role="status" aria-live="polite">&nbsp;</span><button class="btn" type="button" data-checklist-reset="cl-spark-plug">Reset</button></p>
       <ul class="checklist" id="cl-spark-plug">
         <li><input type="checkbox" id="sp1"><span><label for="sp1">Gap set to 0.6 mm before fitting</label></span></li>
         <li><input type="checkbox" id="sp2"><span><label for="sp2">Plug torqued to 25 Nm</label></span></li>
@@ -1965,6 +1976,7 @@
       </ul>
 
       <h4>Final inspection</h4>
+      <p class="checklist__meta no-print"><span class="result-count" data-checklist-count="cl-gear-oil" role="status" aria-live="polite">&nbsp;</span><button class="btn" type="button" data-checklist-reset="cl-gear-oil">Reset</button></p>
       <ul class="checklist" id="cl-gear-oil">
         <li><input type="checkbox" id="go1"><span><label for="go1">Drain plug at 20 Nm with a new sealing ring</label></span></li>
         <li><input type="checkbox" id="go2"><span><label for="go2">Magnet inspected, nothing alarming found</label></span></li>
@@ -2041,6 +2053,7 @@
       </ul>
 
       <h4>Final inspection</h4>
+      <p class="checklist__meta no-print"><span class="result-count" data-checklist-count="cl-coolant-check" role="status" aria-live="polite">&nbsp;</span><button class="btn" type="button" data-checklist-reset="cl-coolant-check">Reset</button></p>
       <ul class="checklist" id="cl-coolant-check">
         <li><input type="checkbox" id="ck1"><span><label for="ck1">Level 10 mm above the fins, engine cold</label></span></li>
         <li><input type="checkbox" id="ck2"><span><label for="ck2">Frost protection to at least &minus;25 &deg;C</label></span></li>
@@ -2107,6 +2120,7 @@
       </ul>
 
       <h4>Final inspection</h4>
+      <p class="checklist__meta no-print"><span class="result-count" data-checklist-count="cl-coolant-change" role="status" aria-live="polite">&nbsp;</span><button class="btn" type="button" data-checklist-reset="cl-coolant-change">Reset</button></p>
       <ul class="checklist" id="cl-coolant-change">
         <li><input type="checkbox" id="cx1"><span><label for="cx1">Drain screw at 7.5 Nm with Loctite 243 and new washer</label></span></li>
         <li><input type="checkbox" id="cx2"><span><label for="cx2">1.2 l added, system bled at the head</label></span></li>
@@ -2209,6 +2223,7 @@
       </ul>
 
       <h4>Final inspection</h4>
+      <p class="checklist__meta no-print"><span class="result-count" data-checklist-count="cl-front-wheel" role="status" aria-live="polite">&nbsp;</span><button class="btn" type="button" data-checklist-reset="cl-front-wheel">Reset</button></p>
       <ul class="checklist" id="cl-front-wheel">
         <li><input type="checkbox" id="fw1"><span><label for="fw1">Spacers in their original positions</label></span></li>
         <li><input type="checkbox" id="fw2"><span><label for="fw2">Spindle screw at 35 Nm, fork shoe screws at 15 Nm</label></span></li>
@@ -2281,6 +2296,7 @@
       </ul>
 
       <h4>Final inspection</h4>
+      <p class="checklist__meta no-print"><span class="result-count" data-checklist-count="cl-rear-wheel" role="status" aria-live="polite">&nbsp;</span><button class="btn" type="button" data-checklist-reset="cl-rear-wheel">Reset</button></p>
       <ul class="checklist" id="cl-rear-wheel">
         <li><input type="checkbox" id="rw1"><span><label for="rw1">Spacers correct, caliper bracket seated</label></span></li>
         <li><input type="checkbox" id="rw2"><span><label for="rw2">Spindle nut at 80 Nm</label></span></li>
@@ -2364,6 +2380,7 @@
       </ul>
 
       <h4>Final inspection</h4>
+      <p class="checklist__meta no-print"><span class="result-count" data-checklist-count="cl-sag" role="status" aria-live="polite">&nbsp;</span><button class="btn" type="button" data-checklist-reset="cl-sag">Reset</button></p>
       <ul class="checklist" id="cl-sag">
         <li><input type="checkbox" id="sg1"><span><label for="sg1">Static sag close to 38 mm</label></span></li>
         <li><input type="checkbox" id="sg2"><span><label for="sg2">Rider sag close to 110 mm in full kit</label></span></li>
@@ -2419,6 +2436,7 @@
       </ul>
 
       <h4>Final inspection</h4>
+      <p class="checklist__meta no-print"><span class="result-count" data-checklist-count="cl-clickers" role="status" aria-live="polite">&nbsp;</span><button class="btn" type="button" data-checklist-reset="cl-clickers">Reset</button></p>
       <ul class="checklist" id="cl-clickers">
         <li><input type="checkbox" id="cl1"><span><label for="cl1">All adjusters counted from fully closed</label></span></li>
         <li><input type="checkbox" id="cl2"><span><label for="cl2">Both fork legs identical</label></span></li>
@@ -2894,6 +2912,7 @@
       </ul>
 
       <h4>Final inspection</h4>
+      <p class="checklist__meta no-print"><span class="result-count" data-checklist-count="cl-drowned" role="status" aria-live="polite">&nbsp;</span><button class="btn" type="button" data-checklist-reset="cl-drowned">Reset</button></p>
       <ul class="checklist" id="cl-drowned">
         <li><input type="checkbox" id="dr1"><span><label for="dr1">Water expelled before any attempt to start</label></span></li>
         <li><input type="checkbox" id="dr2"><span><label for="dr2">Airbox and filter checked and cleared</label></span></li>
@@ -2949,6 +2968,7 @@
       </ul>
 
       <h4>Final inspection</h4>
+      <p class="checklist__meta no-print"><span class="result-count" data-checklist-count="cl-puncture" role="status" aria-live="polite">&nbsp;</span><button class="btn" type="button" data-checklist-reset="cl-puncture">Reset</button></p>
       <ul class="checklist" id="cl-puncture">
         <li><input type="checkbox" id="pu1"><span><label for="pu1">Cause of the puncture found and removed</label></span></li>
         <li><input type="checkbox" id="pu2"><span><label for="pu2">Bead seated evenly, valve stem upright</label></span></li>
@@ -3004,6 +3024,7 @@
       </ul>
 
       <h4>Final inspection, once home</h4>
+      <p class="checklist__meta no-print"><span class="result-count" data-checklist-count="cl-field" role="status" aria-live="polite">&nbsp;</span><button class="btn" type="button" data-checklist-reset="cl-field">Reset</button></p>
       <ul class="checklist" id="cl-field">
         <li><input type="checkbox" id="fd1"><span><label for="fd1">Every field repair identified and listed</label></span></li>
         <li><input type="checkbox" id="fd2"><span><label for="fd2">Each one replaced or repaired properly</label></span></li>
@@ -3040,6 +3061,7 @@
   </div>
 
   <h2 id="workshop-tools">Workshop kit</h2>
+  <p class="checklist__meta no-print"><span class="result-count" data-checklist-count="cl-workshop-tools" role="status" aria-live="polite">&nbsp;</span><button class="btn" type="button" data-checklist-reset="cl-workshop-tools">Reset</button></p>
   <ul class="checklist" id="cl-workshop-tools">
     <li><input type="checkbox" id="wt1"><span><label for="wt1">Hex key set, metric, ball-end and straight</label></span></li>
     <li><input type="checkbox" id="wt2"><span><label for="wt2">Torx key set</label></span></li>
@@ -3065,11 +3087,9 @@
   <div class="wcard" id="card-trailtools">
     <div class="wcard__head">
       <h4>What goes on the bike</h4>
-      <div class="no-print" style="display:flex;gap:.5rem">
-        <button class="btn" type="button" data-checklist-reset="cl-trail-tools">Reset</button>
-        <button class="btn" type="button" data-print-card="card-trailtools"><svg class="btn__ico"><use href="#i-print"/></svg> Print card</button>
-      </div>
+      <button class="btn" type="button" data-print-card="card-trailtools"><svg class="btn__ico"><use href="#i-print"/></svg> Print card</button>
     </div>
+    <p class="checklist__meta no-print"><span class="result-count" data-checklist-count="cl-trail-tools" role="status" aria-live="polite">&nbsp;</span><button class="btn" type="button" data-checklist-reset="cl-trail-tools">Reset</button></p>
     <ul class="checklist" id="cl-trail-tools">
       <li><input type="checkbox" id="tt1"><span><label for="tt1">Multi-tool covering the bike's hex and Torx sizes</label></span></li>
       <li><input type="checkbox" id="tt2"><span><label for="tt2">Spanner or socket for the rear spindle nut</label></span></li>
@@ -3136,6 +3156,7 @@
       <h4>Carried on every ride</h4>
       <button class="btn no-print" type="button" data-print-card="card-spares-bike"><svg class="btn__ico"><use href="#i-print"/></svg> Print card</button>
     </div>
+    <p class="checklist__meta no-print"><span class="result-count" data-checklist-count="cl-spares-bike" role="status" aria-live="polite">&nbsp;</span><button class="btn" type="button" data-checklist-reset="cl-spares-bike">Reset</button></p>
     <ul class="checklist" id="cl-spares-bike">
       <li><input type="checkbox" id="s1"><span><label for="s1">Heavy-duty 21&#8243; inner tube</label><small>Will stretch onto the 18&#8243; rear in an emergency</small></span></li>
       <li><input type="checkbox" id="s2"><span><label for="s2">Spark plug, NGK BR 7 ES</label></span></li>
@@ -3148,6 +3169,7 @@
   </div>
 
   <h2 id="spares-van">Tier 2: in the van</h2>
+  <p class="checklist__meta no-print"><span class="result-count" data-checklist-count="cl-spares-van" role="status" aria-live="polite">&nbsp;</span><button class="btn" type="button" data-checklist-reset="cl-spares-van">Reset</button></p>
   <ul class="checklist" id="cl-spares-van">
     <li><input type="checkbox" id="v1"><span><label for="v1">Second air filter, cleaned and pre-oiled in a sealed bag</label></span></li>
     <li><input type="checkbox" id="v2"><span><label for="v2">Front and rear brake pad sets</label></span></li>
@@ -3165,6 +3187,7 @@
   </ul>
 
   <h2 id="spares-shelf">Tier 3: on the shelf</h2>
+  <p class="checklist__meta no-print"><span class="result-count" data-checklist-count="cl-spares-shelf" role="status" aria-live="polite">&nbsp;</span><button class="btn" type="button" data-checklist-reset="cl-spares-shelf">Reset</button></p>
   <ul class="checklist" id="cl-spares-shelf">
     <li><input type="checkbox" id="h1"><span><label for="h1">Chain and both sprockets as a matched set</label></span></li>
     <li><input type="checkbox" id="h2"><span><label for="h2">Front and rear wheel bearing kits with seals</label></span></li>
@@ -3203,14 +3226,14 @@
 
   <div class="callout callout--note">
     <div class="callout__label">How this logbook stores data</div>
-    <p style="margin-bottom:0">Entries are held in memory for this session and exported to a file you keep. Nothing is written to browser storage, because this handbook is built to run from a local file where browsers block persistent storage and it would work on one machine and silently lose your history on another. Export to JSON when you finish a session, and import it next time. The JSON file is plain text: keep it in a cloud folder or a git repository and you have a durable, portable service history.</p>
+    <p style="margin-bottom:0"><b>Entries live in memory only. Reloading this page or closing the tab clears the table, so export before you finish.</b> Nothing is written to browser storage. The reason is that this handbook is built to run from a local file, where browsers block persistent storage outright: a logbook that quietly saved on one machine and lost your history on the next would be worse than one that never pretended to save at all. Export to JSON when you finish a session, and import it next time. The JSON file is plain text, so keep it in a cloud folder or a git repository and you have a durable, portable service history that outlives any browser.</p>
   </div>
 
   <h2 id="log-add-entry">Add an entry</h2>
   <div class="logbook__form no-print" id="logbook-form">
     <label for="log-date">Date<input class="field" type="date" id="log-date"></label>
     <label for="log-hours">Engine hours<input class="field" type="number" id="log-hours" min="0" step="0.1" placeholder="e.g. 47.5"></label>
-    <label for="log-work" style="grid-column:span 2">Work carried out<input class="field" type="text" id="log-work" placeholder="e.g. Gear oil change, air filter, chain adjusted"></label>
+    <label class="logbook__wide" for="log-work">Work carried out<input class="field" type="text" id="log-work" placeholder="e.g. Gear oil change, air filter, chain adjusted"></label>
     <label for="log-parts">Parts used<input class="field" type="text" id="log-parts" placeholder="e.g. 0.8 l 15W/50, sealing ring"></label>
     <label for="log-by">Carried out by<input class="field" type="text" id="log-by" placeholder="e.g. self / dealer"></label>
     <button class="btn btn--accent" type="button" id="log-add">Add entry</button>
@@ -3303,6 +3326,14 @@
   <h2 id="print-whole">Print the whole handbook</h2>
   <p>Every chapter, with all procedures expanded, formatted for A4. Useful for a workshop binder that does not need a screen.</p>
   <p class="no-print"><button class="btn btn--accent" type="button" id="print-all"><svg class="btn__ico"><use href="#i-print"/></svg> Print complete handbook</button></p>
+
+  <!-- served-only:start -->
+  <div class="rule-line"></div>
+
+  <h2 id="take-it-offline">Take it offline</h2>
+  <p>The same handbook as a single self-contained file: every chapter, stylesheet and script inlined, nothing fetched. Save it to a laptop and open it by double-clicking, no server and no connection. This is the copy to carry to a trailhead.</p>
+  <p class="no-print"><a class="btn btn--accent" href="dist/ktm-300-exc-handbook.html" download><svg class="btn__ico"><use href="#i-tool"/></svg> Download the offline handbook</a></p>
+  <!-- served-only:end -->
 </section>
 
   </div><!-- /content column -->

@@ -179,18 +179,34 @@ def main():
     text = {n: strip_comments((CSS_DIR / n).read_text(encoding="utf-8")) for n in LOAD_ORDER}
     spans = []
     for name, body in text.items():
-        for m in re.finditer(r"([.#][\w-]+)[^{}]*\{([^{}]*grid-(row|column)\s*:\s*[^;]*-1[^;]*;)", body):
-            spans.append((name, m.group(1), m.group(3)))
+        for m in re.finditer(r"([^{}]+?)\{([^{}]*grid-(row|column)\s*:\s*[^;]*-1[^;]*;)", body):
+            sel = m.group(1).strip().split(",")[-1].strip()
+            if not sel or sel.startswith("@"):
+                continue
+            spans.append((name, sel, m.group(3)))
     if not spans:
         print("  (no -1 end lines used)")
+
+    # Which selector is the grid container for this rule? A descendant selector
+    # names it directly (`.logbook__form .logbook__wide` -> `.logbook__form`).
+    # A bare selector is a child of the app shell, which is the only implicit
+    # container in this stylesheet.
+    def container_for(sel):
+        parts = sel.split()
+        return parts[-2] if len(parts) > 1 else ".app"
+
+    all_css = "".join(text.values())
     for name, sel, axis in spans:
         track = "grid-template-rows" if axis == "row" else "grid-template-columns"
-        # the parent shell must declare the matching track list
-        parent_ok = re.search(r"\.app\s*\{[^}]*" + track, text["layout.css"], flags=re.S)
-        ok = bool(parent_ok)
-        print(f"  {'PASS' if ok else 'FAIL'}  {sel} uses grid-{axis} to -1; container declares {track}: {bool(parent_ok)}")
+        parent = container_for(sel)
+        declared = re.search(
+            re.escape(parent) + r"\s*(?:,[^{}]*)?\{[^{}]*" + track, all_css, flags=re.S
+        )
+        ok = bool(declared)
+        print(f"  {'PASS' if ok else 'FAIL'}  {sel} uses grid-{axis} to -1; "
+              f"{parent} declares {track}: {ok}")
         if not ok:
-            failures.append(f"{sel} grid-{axis} -1 without explicit {track}")
+            failures.append(f"{sel} grid-{axis} -1 without explicit {track} on {parent}")
 
     if warnings:
         print("\ncascade warnings")
