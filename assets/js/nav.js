@@ -130,7 +130,9 @@ KTM.nav = (function () {
 
   function go(slug, anchor) {
     var hash = '#/' + slug + (anchor ? '#' + anchor : '');
-    if (window.location.hash === hash) route();
+    // Re-selecting the current chapter sets no new hash, so no hashchange
+    // fires and the drawer would stay open. Close it here instead.
+    if (window.location.hash === hash) { route(); setDrawer(false); }
     else window.location.hash = hash;
   }
 
@@ -167,6 +169,12 @@ KTM.nav = (function () {
 
     document.addEventListener('keydown', function (e) {
       if (e.key === 'Escape') setDrawer(false);
+    });
+
+    // Growing past the drawer breakpoint with it open would otherwise strand
+    // body{overflow:hidden}, leaving the desktop layout unscrollable.
+    window.addEventListener('resize', function () {
+      if (window.innerWidth >= 1024 && railEl.classList.contains('is-open')) setDrawer(false);
     });
 
     // Intercept in-page cross references so they route rather than jump.
